@@ -1,0 +1,10 @@
+.venv/
+.venv312/
+.python/
+.uv-cache/
+.env
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.git/
+tests/

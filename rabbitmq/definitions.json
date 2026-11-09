@@ -1,0 +1,75 @@
+{
+  "users": [
+    {
+      "name": "__RABBITMQ_USER__",
+      "password_hash": "__PASSWORD_HASH__",
+      "tags": ["administrator"]
+    }
+  ],
+  "vhosts": [{"name": "/"}],
+  "permissions": [
+    {
+      "user": "__RABBITMQ_USER__",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "calls.dlx",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "calls.queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {"x-queue-type": "quorum"}
+    },
+    {
+      "name": "calls.dlq",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "calls.dlx",
+      "vhost": "/",
+      "destination": "calls.dlq",
+      "destination_type": "queue",
+      "routing_key": "calls.dead",
+      "arguments": {}
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "calls-main-quorum",
+      "pattern": "^calls\\.queue$",
+      "apply-to": "quorum_queues",
+      "definition": {
+        "delayed-retry-type": "failed",
+        "delayed-retry-min": 2000,
+        "delayed-retry-max": 10000,
+        "delivery-limit": 5,
+        "dead-letter-exchange": "calls.dlx",
+        "dead-letter-routing-key": "calls.dead",
+        "dead-letter-strategy": "at-least-once",
+        "overflow": "reject-publish"
+      },
+      "priority": 10
+    }
+  ]
+}

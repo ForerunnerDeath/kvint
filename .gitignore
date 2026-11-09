@@ -1,0 +1,15 @@
+.env
+.venv/
+.venv312/
+.python/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.pyright/
+dist/
+build/
+
+/kvint.zip

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "call-integration-service"
+version = "0.1.0"
+description = "Call integration service"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.12",
+    "uvicorn==0.34.2",
+    "pydantic==2.11.4",
+    "pydantic-settings==2.8.1",
+    "pymongo==4.13.0",
+    "aio-pika==9.6.2",
+    "structlog==25.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "python-dotenv==1.0.1",
+    "pytest==8.3.5",
+    "pytest-asyncio==0.26.0",
+    "httpx==0.28.1",
+    "ruff==0.11.8",
+    "pyright==1.1.400",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src"]
+extend-exclude = [".python", ".uv-cache", ".venv312"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
